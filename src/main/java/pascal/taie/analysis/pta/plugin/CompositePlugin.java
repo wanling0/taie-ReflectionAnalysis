@@ -128,8 +128,8 @@ public class CompositePlugin implements Plugin {
         onUnresolvedCallPlugins.forEach(p -> p.onUnresolvedCall(recv, context, invoke));
     }
     @Override
-    public void onProcessInvokeStatic(CSCallSite callSite){
-        myreflection.forEach(p->p.onProcessInvokeStatic(callSite));
+    public void onProcessInvokeStatic(Invoke invoke){
+        myreflection.forEach(p->p.onProcessInvokeStatic(invoke));
     }
     @Override
     public void onProcessCall(Var var,Invoke invoke){

@@ -50,10 +50,8 @@ public class MyReflectionAnalysis implements Plugin {
 
     }
     @Override
-    public void onProcessInvokeStatic(CSCallSite callSite){
+    public void onProcessInvokeStatic(Invoke invoke){
         //System.out.println("********************"+invoke.getInvokeExp().getMethodRef().toString());
-        Invoke invoke=callSite.getCallSite();
-        Context context=callSite.getContext();
         String[] method=invoke.getMethodRef().toString().split("\\s+");
         if(method[1].equals("java.lang.Class")){
             String[] name=method[2].split("\\(");
@@ -68,7 +66,7 @@ public class MyReflectionAnalysis implements Plugin {
                         JClass ct=solver.getHierarchy().getClass(cName.getConstValue().toString().replaceAll("\"",""));
 //                        if(ct!=null)
 //                        System.out.println("***"+ct.getName());
-                        //solver.addPointsTo(csManager.getCSVar(context,c), csManager.getCSObj(solver.getHeapModel().getObj()));
+                        //solver.addPointsTo();
                         //class_pts.put(c,ct);
                         //System.out.println("***"+c.getName()+" "+ct.getName());
                     }

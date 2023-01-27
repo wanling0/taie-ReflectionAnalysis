@@ -583,7 +583,7 @@ public class DefaultSolver implements Solver {
                     Context calleeCtx = contextSelector.selectContext(csCallSite, callee);
                     CSMethod csCallee = csManager.getCSMethod(calleeCtx, callee);
                     addCallEdge(new Edge<>(CallKind.STATIC, csCallSite, csCallee));
-                    plugin.onProcessInvokeStatic(csCallSite);
+                    plugin.onProcessInvokeStatic(callSite);
                 }
             }
 
