@@ -3,6 +3,7 @@ package pascal.taie.analysis.pta.plugin.myreflection;
 import pascal.taie.analysis.graph.callgraph.Edge;
 import pascal.taie.analysis.pta.core.cs.context.Context;
 import pascal.taie.analysis.pta.core.cs.element.*;
+import pascal.taie.analysis.pta.core.heap.Obj;
 import pascal.taie.analysis.pta.core.solver.Solver;
 import pascal.taie.analysis.pta.plugin.Plugin;
 import pascal.taie.analysis.pta.pts.PointsToSet;
@@ -20,7 +21,7 @@ public class MyReflectionAnalysis implements Plugin {
     private Solver solver;
     private CSManager csManager;
     private Context emptyContext;
-    private Map<Var,JClass> class_pts=new HashMap<>();
+    private Map<CSObj,JClass> class_pts=new HashMap<>();
 
     @Override
     public void setSolver(Solver solver){
@@ -49,8 +50,10 @@ public class MyReflectionAnalysis implements Plugin {
 
     }
     @Override
-    public void onProcessInvokeStatic(Invoke invoke){
+    public void onProcessInvokeStatic(CSCallSite callSite){
         //System.out.println("********************"+invoke.getInvokeExp().getMethodRef().toString());
+        Invoke invoke=callSite.getCallSite();
+        Context context=callSite.getContext();
         String[] method=invoke.getMethodRef().toString().split("\\s+");
         if(method[1].equals("java.lang.Class")){
             String[] name=method[2].split("\\(");
@@ -65,7 +68,8 @@ public class MyReflectionAnalysis implements Plugin {
                         JClass ct=solver.getHierarchy().getClass(cName.getConstValue().toString().replaceAll("\"",""));
 //                        if(ct!=null)
 //                        System.out.println("***"+ct.getName());
-                        class_pts.put(c,ct);
+                        //solver.addPointsTo(csManager.getCSVar(context,c), csManager.getCSObj(solver.getHeapModel().getObj()));
+                        //class_pts.put(c,ct);
                         //System.out.println("***"+c.getName()+" "+ct.getName());
                     }
                 }

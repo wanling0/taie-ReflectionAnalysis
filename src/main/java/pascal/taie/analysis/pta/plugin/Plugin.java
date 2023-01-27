@@ -108,7 +108,7 @@ public interface Plugin {
      */
     default void onUnresolvedCall(CSObj recv, Context context, Invoke invoke) {
     }
-    default void onProcessInvokeStatic(Invoke invoke){
+    default void onProcessInvokeStatic(CSCallSite callSite){
     }
     default void onProcessCall(Var var, Invoke invoke){
 
