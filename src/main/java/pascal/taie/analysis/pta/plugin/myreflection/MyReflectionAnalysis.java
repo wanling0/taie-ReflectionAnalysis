@@ -6,6 +6,7 @@ import pascal.taie.analysis.pta.core.cs.element.*;
 import pascal.taie.analysis.pta.core.solver.Solver;
 import pascal.taie.analysis.pta.plugin.Plugin;
 import pascal.taie.analysis.pta.pts.PointsToSet;
+import pascal.taie.ir.exp.ClassLiteral;
 import pascal.taie.ir.exp.Var;
 import pascal.taie.ir.stmt.Invoke;
 import pascal.taie.language.classes.JClass;
@@ -67,6 +68,8 @@ public class MyReflectionAnalysis implements Plugin {
 //                        System.out.println("***"+ct.getName());
                         class_pts.put(c,ct);
                         //System.out.println("***"+c.getName()+" "+ct.getName());
+                        solver.addVarPointsTo(null, c, null,
+                                solver.getHeapModel().getConstantObj(ClassLiteral.get(ct.getType())));
                     }
                 }
             }
@@ -88,8 +91,11 @@ public class MyReflectionAnalysis implements Plugin {
                             if(c_!=null){
                                 //JMethod mt=solver.getHierarchy().getMethod(mName.getConstValue().toString().replaceAll("\"",""));
                                 JMethod mt=c_.getDeclaredMethod(mName.getConstValue().toString().replaceAll("\"",""));
-                                if(mt!=null)
-                                    System.out.println("***"+mt.getName());
+                                if(mt!=null) {
+                                    System.out.println("***" + mt.getName());
+                                    solver.addVarPointsTo(null, m, null,
+                                            solver.getHeapModel().getConstantObj(ClassLiteral.get(m.getType())));
+                                }
                             }
                         }
                     }
