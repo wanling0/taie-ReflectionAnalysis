@@ -83,11 +83,7 @@ import pascal.taie.language.type.TypeSystem;
 import pascal.taie.util.collection.Maps;
 import pascal.taie.util.collection.Sets;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import static pascal.taie.language.classes.Signatures.FINALIZE;
 import static pascal.taie.language.classes.Signatures.FINALIZER_REGISTER;
@@ -221,10 +217,15 @@ public class DefaultSolver implements Solver {
         initialize();
         analyze();
     }
+    @Override
+    public PointerFlowGraph getPointerFlowGraph() {
+        return pointerFlowGraph;
+    }
 
     /**
      * Initializes pointer analysis.
      */
+
     private void initialize() {
         callGraph = new CSCallGraph(csManager);
         pointerFlowGraph = new PointerFlowGraph();
@@ -259,6 +260,17 @@ public class DefaultSolver implements Solver {
             }
         }
         plugin.onFinish();
+        logger.info("call graph edges:");
+        callGraph.reachableMethods()
+                //.sorted(cmp) // sort reachable methods
+                .forEach(caller ->
+                        callGraph.callSitesIn(caller)
+                                //.sorted(Comparator.comparing(Invoke::getIndex))
+                                .filter(callSite -> !callGraph.getCalleesOf(callSite).isEmpty())
+                                .forEach(callSite ->
+                                        logger.info(callSite.toString() + "->" +
+                                                callGraph.getCalleesOf(callSite).toString())));
+        logger.info("----------------------------------------");
     }
 
     /**
@@ -397,6 +409,8 @@ public class DefaultSolver implements Solver {
                     plugin.onUnresolvedCall(recvObj, context, callSite);
                 }
             });
+            logger.info("*****"+callSite.getInvokeExp().getMethodRef().toString());
+            plugin.onProcessCall(var,callSite);
         }
     }
 
@@ -569,6 +583,7 @@ public class DefaultSolver implements Solver {
                     Context calleeCtx = contextSelector.selectContext(csCallSite, callee);
                     CSMethod csCallee = csManager.getCSMethod(calleeCtx, callee);
                     addCallEdge(new Edge<>(CallKind.STATIC, csCallSite, csCallee));
+                    plugin.onProcessInvokeStatic(callSite);
                 }
             }
 

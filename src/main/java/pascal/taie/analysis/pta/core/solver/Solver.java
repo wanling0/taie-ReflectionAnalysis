@@ -62,6 +62,7 @@ public interface Solver {
     ContextSelector getContextSelector();
 
     CallGraph<CSCallSite, CSMethod> getCallGraph();
+    PointerFlowGraph getPointerFlowGraph();
 
     /**
      * Returns the points-to set of given pointer. If the pointer has not

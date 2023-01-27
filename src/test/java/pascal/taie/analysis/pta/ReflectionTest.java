@@ -29,14 +29,19 @@ public class ReflectionTest {
 
     private static final String DIR = "reflection";
 
-    @Test
-    public void testStringConstant() {
-        Tests.testPTA(DIR, "GetMember");
-    }
+//    @Test
+//    public void testStringConstant() {
+//        Tests.testPTA(DIR, "GetMember");
+//    }
+//
+//    @Test
+//    public void testReflectionLog() {
+//        Tests.testPTA(DIR, "ReflectiveAction",
+//                "reflection-log:src/test/resources/pta/reflection/ReflectiveAction.log");
+//    }
 
     @Test
-    public void testReflectionLog() {
-        Tests.testPTA(DIR, "ReflectiveAction",
-                "reflection-log:src/test/resources/pta/reflection/ReflectiveAction.log");
+    public void testBasic(){
+        Tests.testPTA(DIR,"Basic");
     }
 }

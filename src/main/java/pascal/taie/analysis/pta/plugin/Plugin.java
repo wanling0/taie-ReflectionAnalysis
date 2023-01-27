@@ -30,6 +30,7 @@ import pascal.taie.analysis.pta.core.cs.element.CSObj;
 import pascal.taie.analysis.pta.core.cs.element.CSVar;
 import pascal.taie.analysis.pta.core.solver.Solver;
 import pascal.taie.analysis.pta.pts.PointsToSet;
+import pascal.taie.ir.exp.Var;
 import pascal.taie.ir.stmt.Invoke;
 import pascal.taie.language.classes.JMethod;
 
@@ -106,5 +107,10 @@ public interface Plugin {
      * @param invoke  the invocation site
      */
     default void onUnresolvedCall(CSObj recv, Context context, Invoke invoke) {
+    }
+    default void onProcessInvokeStatic(Invoke invoke){
+    }
+    default void onProcessCall(Var var, Invoke invoke){
+
     }
 }

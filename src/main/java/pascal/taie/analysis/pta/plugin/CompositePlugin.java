@@ -30,6 +30,7 @@ import pascal.taie.analysis.pta.core.cs.element.CSObj;
 import pascal.taie.analysis.pta.core.cs.element.CSVar;
 import pascal.taie.analysis.pta.core.solver.Solver;
 import pascal.taie.analysis.pta.pts.PointsToSet;
+import pascal.taie.ir.exp.Var;
 import pascal.taie.ir.stmt.Invoke;
 import pascal.taie.language.classes.JMethod;
 
@@ -57,6 +58,7 @@ public class CompositePlugin implements Plugin {
     private final List<Plugin> onNewCSMethodPlugins = new ArrayList<>();
 
     private final List<Plugin> onUnresolvedCallPlugins = new ArrayList<>();
+    private final List<Plugin> myreflection=new ArrayList<>();
 
     public void addPlugin(Plugin... plugins) {
         for (Plugin plugin : plugins) {
@@ -68,6 +70,7 @@ public class CompositePlugin implements Plugin {
             addPlugin(plugin, onNewCSMethodPlugins, "onNewCSMethod", CSMethod.class);
             addPlugin(plugin, onUnresolvedCallPlugins,
                     "onUnresolvedCall", CSObj.class, Context.class, Invoke.class);
+            addPlugin(plugin,myreflection,"onProcessInvokeStatic",Invoke.class);
         }
     }
 
@@ -123,5 +126,13 @@ public class CompositePlugin implements Plugin {
     @Override
     public void onUnresolvedCall(CSObj recv, Context context, Invoke invoke) {
         onUnresolvedCallPlugins.forEach(p -> p.onUnresolvedCall(recv, context, invoke));
+    }
+    @Override
+    public void onProcessInvokeStatic(Invoke invoke){
+        myreflection.forEach(p->p.onProcessInvokeStatic(invoke));
+    }
+    @Override
+    public void onProcessCall(Var var,Invoke invoke){
+        myreflection.forEach(p->p.onProcessCall(var,invoke));
     }
 }
